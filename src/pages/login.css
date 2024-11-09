@@ -1,0 +1,159 @@
+/* login.css */
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    font-family: 'Poppins', sans-serif;
+    animation: fadeIn 1s ease-in-out;
+    padding: 70px;
+    border-radius: 20px;
+}
+
+.title {
+    color: #2D6A4F;  /* Dovuchcha green */
+    font-size: 2em;
+    margin-bottom: 20px;
+    animation: slideIn 0.6s ease-in-out;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    animation: popUp 0.8s ease;
+}
+
+.input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.input:focus {
+    border-color: #2D6A4F;
+    outline: none;
+    box-shadow: 0 0 8px rgba(45, 106, 79, 0.3);
+}
+
+.login-button {
+    background-color: #2D6A4F;
+    color: #ffffff;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.login-button:hover {
+    background-color: #1B4D3E;
+}
+
+.message {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #d9534f;  /* Red color for warning text */
+    background-color: #f8d7da;  /* Light red background for warning */
+    border: 1px solid #d9534f;  /* Red border */
+    border-radius: 8px;
+    text-align: center;
+    max-width: 300px;
+    animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes popUp {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInMessage {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.8;
+    }
+}
+
+.register-link {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.register-link a {
+    color: #2D6A4F;  /* Dovuchcha green */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+    color: #1B4D3E;
+}
