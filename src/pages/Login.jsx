@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import './login.css';
 
 const Login = () => {
@@ -9,13 +9,18 @@ const Login = () => {
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
+    // Get the 'next' parameter from the URL if it exists
+    const nextUrl = searchParams.get('next');
 
     useEffect(() => {
         const token = localStorage.getItem('access_token');
         if (token) {
-            navigate('/profile');
+            // Redirect to the 'next' URL if available, otherwise to the profile page
+            navigate(nextUrl || '/profile');
         }
-    }, [navigate]);
+    }, [navigate, nextUrl]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -27,7 +32,9 @@ const Login = () => {
 
             setMessage('Login successful!');
             setIsError(false);  // Successful login, not an error
-            navigate('/profile');
+
+            // Redirect to the 'next' URL if available, otherwise to the profile page
+            navigate(nextUrl || '/profile');
         } catch (error) {
             setMessage('Login failed: ' + (error.response?.data?.error || error.message));
             setIsError(true);  // Set error flag
