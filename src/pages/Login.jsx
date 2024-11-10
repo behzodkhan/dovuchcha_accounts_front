@@ -11,14 +11,27 @@ const Login = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
-    // Get the 'next' parameter from the URL if it exists
-    const nextUrl = searchParams.get('next');
+    // Decode the 'next' parameter if it exists
+    const nextUrl = searchParams.get('next') ? decodeURIComponent(searchParams.get('next')) : null;
+
+    // Helper function to handle redirection after login
+    const redirectAfterLogin = () => {
+        if (nextUrl) {
+            // Check if the next URL is external by looking for "http" or "https"
+            if (nextUrl.startsWith('http')) {
+                window.location.href = nextUrl;  // Use window.location.href for external URLs
+            } else {
+                navigate(nextUrl);  // Use navigate for internal URLs
+            }
+        } else {
+            navigate('/profile');  // Default to profile page if no next URL is provided
+        }
+    };
 
     useEffect(() => {
         const token = localStorage.getItem('access_token');
         if (token) {
-            // Redirect to the 'next' URL if available, otherwise to the profile page
-            navigate(nextUrl || '/profile');
+            redirectAfterLogin();
         }
     }, [navigate, nextUrl]);
 
@@ -33,8 +46,7 @@ const Login = () => {
             setMessage('Login successful!');
             setIsError(false);  // Successful login, not an error
 
-            // Redirect to the 'next' URL if available, otherwise to the profile page
-            navigate(nextUrl || '/profile');
+            redirectAfterLogin();  // Redirect based on the next URL
         } catch (error) {
             setMessage('Login failed: ' + (error.response?.data?.error || error.message));
             setIsError(true);  // Set error flag
