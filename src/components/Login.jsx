@@ -9,7 +9,7 @@ const Login = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
-    const redirect_url = searchParams.get('redirect_url');
+    const redirect_url = searchParams.get('redirection');
 
     useEffect(() => {
         if (authTokens && redirect_url) {
