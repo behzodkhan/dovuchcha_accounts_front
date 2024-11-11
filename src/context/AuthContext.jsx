@@ -26,7 +26,6 @@ export const AuthProvider = ({children}) => {
             localStorage.setItem('authTokens', JSON.stringify(data));
             return true;
         } else {
-            alert('Something went wrong! Dovuchcha is working on it.');
             return false;
         }
     };
