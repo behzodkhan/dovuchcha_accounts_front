@@ -1,5 +1,5 @@
 // src/components/Login.jsx
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import './login.css';
 import { AuthContext } from '../context/AuthContext';
@@ -9,15 +9,22 @@ const Login = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
+    // Get redirect_url from query parameters
     const redirect_url = searchParams.get('redirection');
 
     useEffect(() => {
-        if (authTokens && redirect_url) {
-            const url = new URL(redirect_url);
-            url.searchParams.append('refresh_token', authTokens.refresh);
-            window.location.href = url.toString();
+        if (authTokens) {
+            if (redirect_url) {
+                // User is authenticated and redirect_url is provided
+                const url = new URL(redirect_url);
+                url.searchParams.append('refresh_token', authTokens.refresh);
+                window.location.href = url.toString();
+            } else {
+                // User is authenticated but no redirect_url, redirect to main page
+                navigate('/');
+            }
         }
-    }, [authTokens, redirect_url]);
+    }, [authTokens, redirect_url, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,7 +35,8 @@ const Login = () => {
                 url.searchParams.append('refresh_token', authTokens.refresh);
                 window.location.href = url.toString();
             } else {
-                navigate('/profile');
+                // No redirect_url, navigate to main page
+                navigate('/');
             }
         }
     };
