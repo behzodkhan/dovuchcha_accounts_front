@@ -1,38 +1,67 @@
-// src/components/Login.jsx
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import './login.css';
 import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
 
 const Login = () => {
     const { loginUser, authTokens } = useContext(AuthContext);
+    const [loading, setLoading] = useState(false);
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
     const redirect_url = searchParams.get('redirection');
 
     useEffect(() => {
-        if (authTokens) {
-            if (redirect_url) {
-                const url = new URL(redirect_url);
-                url.searchParams.append('refresh_token', authTokens.refresh);
-                window.location.href = url.toString();
-            } else {
+        const sendTokenAndRedirect = async () => {
+            if (authTokens && redirect_url) {
+                setLoading(true); 
+                try {
+                    await axios.post(`${redirect_url}/api/token_receive`, {
+                        refresh_token: authTokens.refresh,
+                    });
+
+                    setTimeout(() => {
+                        window.location.href = redirect_url;
+                    }, 1000);
+                } catch (error) {
+                    console.error("Failed to send token:", error);
+                } finally {
+                    setLoading(false); 
+                }
+            } else if (authTokens) {
                 navigate('/');
             }
-        }
+        };
+
+        sendTokenAndRedirect();
     }, [authTokens, redirect_url, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const success = await loginUser(e);
+
         if (success) {
             if (redirect_url) {
-                const url = new URL(redirect_url);
-                url.searchParams.append('refresh_token', authTokens.refresh);
-                window.location.href = url.toString();
+                const sendTokenAndRedirect = async () => {
+                    setLoading(true); // Start loading before making the request
+                    try {
+                        await axios.post(`${redirect_url}/api/auth/token-receive`, {
+                            refresh_token: authTokens.refresh,
+                        });
+
+                        // Delay the redirection slightly to show the loading indicator
+                        setTimeout(() => {
+                            window.location.href = redirect_url;
+                        }, 1000);
+                    } catch (error) {
+                        console.error("Failed to send token:", error);
+                    } finally {
+                        setLoading(false); // Stop loading after the request completes
+                    }
+                };
+                sendTokenAndRedirect();
             } else {
-                // No redirect_url, navigate to main page
                 navigate('/');
             }
         }
@@ -56,10 +85,11 @@ const Login = () => {
                     className="input"
                     required
                 />
-                <button type="submit" className="login-button">
-                    Login
+                <button type="submit" className="login-button" disabled={loading}>
+                    {loading ? "Loading..." : "Login"}
                 </button>
             </form>
+            {loading && <p className="loading-message">Redirecting...</p>}
             <p className="register-link">
                 Don't have an account? <Link to="/register">Register here</Link>
             </p>
