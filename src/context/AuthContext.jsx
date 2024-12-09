@@ -37,6 +37,7 @@ export const AuthProvider = ({children}) => {
     };
 
     let updateToken = async () => {
+        console.log(authTokens?.refresh)
         let response = await fetch('https://behzod.pythonanywhere.com/api/token/refresh/', {
             method:'POST',
             headers:{
@@ -45,6 +46,8 @@ export const AuthProvider = ({children}) => {
             body:JSON.stringify({'refresh':authTokens?.refresh})
         })
         let data = await response.json()
+        data.refresh = authTokens?.refresh
+        console.log(data)
         if(response.status===200){
             setAuthTokens(data)
             setUser(jwtDecode(data.access))
